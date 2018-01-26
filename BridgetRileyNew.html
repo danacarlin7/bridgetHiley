@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Bridget Riley</title>
+    <link rel="stylesheet" href="BridgetRiley.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+</head>
+<body>
+<p>AccelX: <span id="acc-x"></span> AccelY: <span id="acc-y"></span> AccelZ: <span id="acc-z"></span></p>
+<p>Xoffset: <span id="off-x"></span> Yoffset: <span id="off-y"></span> Zoffset: <span id="off-z"></span></p>
+<canvas id="c" width = "1200" height = "1000" style="border: 1 px solid #c3c3c3";>
+</canvas>
+
+<script>
+    var canvas = document.getElementById("c");
+    var ctx = c.getContext("2d");
+    var xVal = 0;
+    var yVal = 0;
+    var zVal = 0;
+
+    function drawCurves(x, y, z){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById("off-x").innerHTML = x;
+        document.getElementById("off-y").innerHTML = y;
+        document.getElementById("off-z").innerHTML = z;
+        ctx.beginPath();
+        ctx.moveTo(x+50, y);
+        ctx.lineTo(x-1000, z);
+        for(var i=0; i<2000;i++) {
+            var j = 12.5 * (i + z);
+              var k = x;
+              var l = y;
+            ctx.moveTo(-200 + j, 0 + k);
+            ctx.bezierCurveTo(175 + j, 330 + k, 1 + j, 600 + k, j, 600 + k);
+            ctx.bezierCurveTo(-150 + j, 750 + k, 250 + j, 800 + k, j + 75, 850 + k);
+            //ctx.bezierCurveTo(200+j,850, 100+j, 1000, j, 1000);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+    window.addEventListener("devicemotion", handleDeviceMotion, true)
+
+    function handleDeviceMotion(e) {
+        var x = e.acceleration.x;
+        var y = e.acceleration.y;
+        var z = e.acceleration.z;
+        document.getElementById("acc-x").innerHTML = x;
+        document.getElementById("acc-z").innerHTML = z;
+        document.getElementById("acc-y").innerHTML = y;
+
+
+        setStrokeColor(ctx);
+        xVal = Math.floor(x * -100);
+        yVal = Math.floor(y * 100);
+        zVal = Math.floor(z * 100);
+        //drawCurves(Math.floor(x * 1000), Math.floor(y * 1000), Math.floor(z * 1000));
+    }
+    function setStrokeColor(ctx){
+        ctx.strokeStyle= "#000000";
+    }
+    //setBackgroundColor('x', color);
+    //setBackgroundColor('y', color);
+    //setBackgroundColor('z', color);
+    //function setBackgroundColor(var, color) {
+    //  document.getElementbyId(var).color = "blue";
+
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = '#000000';
+    drawCurves(0,0,0);
+    ctx.stroke();
+    setInterval(function(){
+        drawCurves(xVal, yVal, zVal);
+    }, 300);
+
+</script>
+</body>
+</html>
+
